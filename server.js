@@ -4,8 +4,8 @@ const path = require('path');
 const PORT = process.env.PORT || 3001;
 const app = express();
 
-const apiRoutes = require('./routes/apiRoutes');
-const htmlRoutes = require('./routes/htmlRoutes');
+const apiRoutes = require('./apiRoutes/index');
+const htmlRoutes = require('./apiRoutes/htmlxs');
 
 // Sets up the Express app to handle data parsing
 app.use(express.json());
