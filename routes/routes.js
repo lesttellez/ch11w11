@@ -29,6 +29,7 @@ router.post("/notes", function (req, res) {
     title: req.body.title,
     text: req.body.text,
   };
+  //collect the data and push it into db.json
   console.log(newNote);
   notes.push(newNote);
   res.json(newNote);
