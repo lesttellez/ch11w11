@@ -1,11 +1,14 @@
-const { db } = require("../../db/db.json");
-const router = require("express").Router();
+const router = require('express').Router();
 const fs = require("fs");
-//npm package to create a random unique id
-const { v4: uuidv4 } = require("uuid");
 
-//get notes from db.json if there are any
-const savedNotes = fs.readFileSync("./db/db.json", "UTF-8");
+//npm package to create a random id
+const { v4: uuidv4 } = require("uuid");
+const path = require("path");
+const database = require('../db/db.json');
+
+// get notes from db.json
+const savedNotes = fs.readFileSync(path.resolve(__dirname, '../db/db.json'));
+
 if (savedNotes) {
   let oldNotes = JSON.parse(savedNotes);
   notes = oldNotes;
@@ -13,12 +16,12 @@ if (savedNotes) {
   notes = [];
 }
 
-//display those notes to the page
+//display notes to the page
 router.get("/notes", (req, res) => {
   return res.json(notes);
 });
 
-//collect client input data, store it and write it to the page
+//collect client input data, store it and write it
 router.post("/notes", function (req, res) {
   let noteId = uuidv4();
   let newNote = {
@@ -30,7 +33,7 @@ router.post("/notes", function (req, res) {
   console.log(newNote);
   notes.push(newNote);
   res.json(newNote);
-  fs.writeFileSync("./db/db.json", JSON.stringify(notes, null, 2), function (
+  fs.writeFileSync("../db/db.json", JSON.stringify(notes, null, 2), function (
     err
   ) {
     if (err) throw err;
@@ -39,11 +42,13 @@ router.post("/notes", function (req, res) {
 
 //Delete a note from the notes array based on its unique ID
 router.delete("/notes/:id", (req, res) => {
+  //find the id of the note that is going to be deleted
   let deleteNote = notes.findIndex((item) => item.id === req.params.id);
+  //remove the note from the notes array
   notes.splice(deleteNote, 1);
 
   //write the updated array to db.json
-  fs.writeFileSync("./db/db.json", JSON.stringify(notes, null, 2), function (
+  fs.writeFileSync("../db/db.json", JSON.stringify(notes, null, 2), function (
     err
   ) {
     if (err) throw err;
